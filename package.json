@@ -1,5 +1,5 @@
 {
-  "name": "config-loader",
+  "name": "@rlmartin/config-loader",
   "scripts": {
     "build": "npx projen build",
     "bump": "npx projen bump",
@@ -13,6 +13,7 @@
     "post-upgrade": "npx projen post-upgrade",
     "pre-compile": "npx projen pre-compile",
     "release": "npx projen release",
+    "release:dev": "npx projen release:dev",
     "test": "npx projen test",
     "test:watch": "npx projen test:watch",
     "unbump": "npx projen unbump",
@@ -40,6 +41,9 @@
   },
   "main": "lib/index.js",
   "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "0.0.0",
   "jest": {
     "testMatch": [
