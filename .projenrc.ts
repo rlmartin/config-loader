@@ -17,10 +17,16 @@ const project = new typescript.TypeScriptProject({
       branches: ['main'],
     },
   },
+  deps: [
+    '@aws-sdk/client-secrets-manager@~3',
+    '@aws-sdk/util-arn-parser@~3',
+    '@types/aws-lambda@~8',
+  ],
+  devDeps: [
+    'aws-sdk-client-mock@~2',
+  ],
 
-  // deps: [],                /* Runtime dependencies of this module. */
   // description: undefined,  /* The description is just a string that helps people understand the purpose of the package. */
-  // devDeps: [],             /* Build dependencies for this module. */
   // packageName: undefined,  /* The "name" in package.json. */
 });
 project.synth();
