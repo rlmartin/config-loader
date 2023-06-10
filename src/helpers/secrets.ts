@@ -25,13 +25,23 @@ export async function recursivelyLoad(json: any, region: string): Promise<any> {
       // all other properties will be dropped.
       return loadSecretJson(json[Ref], region);
     } else {
-      const loadedEntries = await Promise.all(Object.entries(json).map(async ([key, value]) => [key, await recursivelyLoad(value, region)]));
-      return loadedEntries.reduce((current, [key, value]) => {
-        current[key] = value;
-        return current;
-      }, Object.assign({}));
+      return recursivelyLoadObject(json, region);
     }
   } else {
     return json;
   }
+}
+
+export async function recursivelyLoadObject(obj: object, region: string): Promise<object> {
+  const loadedEntries = await Promise.all(Object.entries(obj).map(async ([key, value]) => {
+    var json = value;
+    try {
+      if (json && typeof json === 'string') json = JSON.parse(json);
+    } catch {}
+    return [key, await recursivelyLoad(json, region)];
+  }));
+  return loadedEntries.reduce((current, [key, value]) => {
+    current[key] = value;
+    return current;
+  }, Object.assign({}));
 }

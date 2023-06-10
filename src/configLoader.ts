@@ -1,6 +1,6 @@
 import { parse } from '@aws-sdk/util-arn-parser';
 import { Context } from 'aws-lambda';
-import { loadSecretJson, recursivelyLoad } from './helpers/secrets';
+import { loadSecretJson, recursivelyLoadObject } from './helpers/secrets';
 
 export class ConfigLoader<C> {
   context: Context;
@@ -12,17 +12,7 @@ export class ConfigLoader<C> {
 
   private async loadConfig(context: Context): Promise<C> {
     const region = process.env.AWS_REGION ?? parse(context.invokedFunctionArn).region;
-    const envArr = await Promise.all(Object.entries(process.env).map(async ([key, value]) => {
-      var json = value;
-      try {
-        if (json) json = JSON.parse(json);
-      } catch {}
-      return [key, await recursivelyLoad(json, region)];
-    }));
-    const envJson = envArr.reduce((current, [key, value]) => {
-      current[key] = value;
-      return current;
-    }, Object.assign({}));
+    const envJson = await recursivelyLoadObject(process.env, region);
     const secretJson = await loadSecretJson(context.functionName, region);
     const untypedResult = {
       ...envJson,
