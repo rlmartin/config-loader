@@ -1,6 +1,6 @@
-import { GetSecretValueCommand, SecretsManagerClient } from '@aws-sdk/client-secrets-manager';
 import { parse } from '@aws-sdk/util-arn-parser';
 import { Context } from 'aws-lambda';
+import { loadSecretJson, recursivelyLoadObject } from './helpers/secrets';
 
 export class ConfigLoader<C> {
   context: Context;
@@ -11,15 +11,11 @@ export class ConfigLoader<C> {
   }
 
   private async loadConfig(context: Context): Promise<C> {
-    const secretsManager = new SecretsManagerClient({
-      region: process.env.AWS_REGION ?? parse(context.invokedFunctionArn).region,
-    });
-    const secret = await secretsManager.send(new GetSecretValueCommand({
-      SecretId: context.functionName,
-    }));
-    const secretJson = secret.SecretString ? JSON.parse(secret.SecretString) : {};
+    const region = process.env.AWS_REGION ?? parse(context.invokedFunctionArn).region;
+    const envJson = await recursivelyLoadObject(process.env, region);
+    const secretJson = await loadSecretJson(context.functionName, region);
     const untypedResult = {
-      ...process.env,
+      ...envJson,
       ...secretJson,
     };
     const result: C = Object.entries(untypedResult).reduce((record, [key, value]) => {

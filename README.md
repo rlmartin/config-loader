@@ -53,3 +53,23 @@ The config is loaded from all of the following sources, in order of precedence (
 
 ## Secret name
 The secret name matches the AWS Lambda function name.
+
+
+## Nested secrets
+It is possible to load values from other secrets by setting the value to:
+
+```
+{
+  'propertyName': { '$ref':'secretName' }
+}
+```
+
+where `secretName` is the name of the secret that should be loaded as the value for `propertyName`. The value in the dependent secret can be any value (JSON or otherwise). This loading is recursive.
+
+Be careful to not load too many dependent secrets and/or nest too deeply - because a) SecretsManager pricing is based on the number of secrets loaded and b) it could adversely affect load times.
+
+This same secret-loading process can be utilized by env vars, e.g.
+
+```
+process.env['propertyName'] = '{"$ref":"secretName"}';
+```
