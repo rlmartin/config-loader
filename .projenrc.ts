@@ -1,7 +1,7 @@
 import { typescript } from 'projen';
 import { NpmAccess } from 'projen/lib/javascript';
 
-const majorVersion = 0;
+const majorVersion = 1;
 const project = new typescript.TypeScriptProject({
   defaultReleaseBranch: 'main',
   name: '@rlmartin/config-loader',
@@ -19,6 +19,7 @@ const project = new typescript.TypeScriptProject({
   },
   deps: [
     '@aws-sdk/client-secrets-manager@~3',
+    '@aws-sdk/client-ssm@~3',
     '@aws-sdk/util-arn-parser@~3',
     '@types/aws-lambda@~8',
   ],
