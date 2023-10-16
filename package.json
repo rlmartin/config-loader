@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "~3",
+    "@aws-sdk/client-ssm": "~3",
     "@aws-sdk/util-arn-parser": "~3",
     "@types/aws-lambda": "~8"
   },

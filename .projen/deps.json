@@ -82,6 +82,11 @@
       "type": "runtime"
     },
     {
+      "name": "@aws-sdk/client-ssm",
+      "version": "~3",
+      "type": "runtime"
+    },
+    {
       "name": "@aws-sdk/util-arn-parser",
       "version": "~3",
       "type": "runtime"
