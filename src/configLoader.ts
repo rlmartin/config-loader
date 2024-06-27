@@ -57,10 +57,10 @@ export class ConfigLoader<C> {
     }
   }
 
-  async get(key: keyof C): Promise<C[typeof key]> {
+  async get<T extends keyof C>(key: T): Promise<C[T]> {
     if (this.config) {
       if (!this.config[key] && !this.attemptedParamStore[key] && !this.options.skip?.parameterStore) {
-        const params = await getParameterValues([key], this.region, this.options.parameterStorePrefix);
+        const params = await getParameterValues<C>([key], this.region, this.options.parameterStorePrefix);
         this.config[key] = params[key] as any;
         this.attemptedParamStore[key] = true;
       }

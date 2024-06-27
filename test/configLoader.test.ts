@@ -70,6 +70,25 @@ describe('ConfigLoader', () => {
     expect(foo).toEqual('bar');
   });
 
+  test('loads different types from Secrets Manager', async () => {
+    secretsMock.on(GetSecretValueCommand, {
+      SecretId: 'foo-bar',
+    }).resolves({ SecretString: '{"FOO":"bar","BAR":123,"BAZ":"{\\"foo\\":\\"bar\\"}"}' });
+    interface Test {
+      readonly FOO: string;
+      readonly BAR: number;
+      readonly BAZ: object;
+    }
+    const config = new ConfigLoader<Test>(createContext('foo-bar'));
+    await config.load();
+    const foo: string = await config.get('FOO');
+    expect(foo).toEqual('bar');
+    const bar: number = await config.get('BAR');
+    expect(bar).toEqual(123);
+    const baz: object = await config.get('BAZ');
+    expect(baz).toEqual({ foo: 'bar' });
+  });
+
   test('recursively loads value from Secrets Manager', async () => {
     secretsMock.on(GetSecretValueCommand, {
       SecretId: 'foo-bar',
