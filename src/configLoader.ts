@@ -37,7 +37,7 @@ export class ConfigLoader<C> {
   private async loadConfig(context: Context): Promise<C> {
     this.region = process.env.AWS_REGION ?? parse(context.invokedFunctionArn).region;
     const envJson = await recursivelyLoadObject(process.env, this.region);
-    const secretJson = this.options.skip?.secretsManager ? {} : await loadSecretJson(context.functionName, this.region);
+    const secretJson = this.options.skip?.secretsManager ? {} : await loadSecretJson(process.env.SECRET_NAME ?? context.functionName, this.region);
     const untypedResult = {
       ...envJson,
       ...secretJson,

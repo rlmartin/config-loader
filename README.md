@@ -52,7 +52,7 @@ The config is loaded from all of the following sources, in order of precedence (
 
 
 ## Secret name
-The secret name matches the AWS Lambda function name.
+The secret name matches the AWS Lambda function name. This can be overridden by setting the `SECRET_NAME` environment variable, which should be set to _only_ the name of the secret (not the ARN).
 
 
 ## Nested secrets
