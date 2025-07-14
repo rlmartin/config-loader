@@ -13,7 +13,7 @@ export async function getParameterValues<C>(parameterNames: (keyof C)[], region:
     if (param.Name) {
       const name = prefix === '' ? param.Name : param.Name.replace(prefix, '');
       const value = param.Value ?? '';
-      result[name] = param.Type === ParameterType.STRING_LIST ? value.split(',') : value;
+      result[name] = param.Type === ParameterType.STRING_LIST ? value.split(',').map(s => JSON.parse(s)) : JSON.parse(value);
     }
     return result;
   }, Object.assign({}));
