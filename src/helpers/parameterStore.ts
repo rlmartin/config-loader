@@ -13,8 +13,16 @@ export async function getParameterValues<C>(parameterNames: (keyof C)[], region:
     if (param.Name) {
       const name = prefix === '' ? param.Name : param.Name.replace(prefix, '');
       const value = param.Value ?? '';
-      result[name] = param.Type === ParameterType.STRING_LIST ? value.split(',').map(s => JSON.parse(s)) : JSON.parse(value);
+      result[name] = param.Type === ParameterType.STRING_LIST ? value.split(',').map(maybeJson) : maybeJson(value);
     }
     return result;
   }, Object.assign({}));
+}
+
+function maybeJson(value: string): any {
+  try {
+    return JSON.parse(value);
+  } catch {
+    return value;
+  }
 }
