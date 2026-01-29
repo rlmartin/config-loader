@@ -8,6 +8,8 @@ const project = new typescript.TypeScriptProject({
   projenrcTs: true,
   releaseToNpm: true,
   npmAccess: NpmAccess.PUBLIC,
+  projenVersion: '^0',
+  npmTrustedPublishing: true,
   repository: 'https://github.com/rlmartin/config-loader',
   majorVersion,
   releaseBranches: {
